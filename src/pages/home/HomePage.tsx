@@ -6,9 +6,11 @@ import sideImage1 from "../../assets/images/sider_2019_12-09.png";
 import {productList1, productList2, productList3} from "../../mockups";
 import sideImage2 from "../../assets/images/sider_2019_02-04.png";
 import sideImage3 from "../../assets/images/sider_2019_02-04-2.png";
+import { withTranslation, WithTranslation } from 'react-i18next';
 
-export class HomePage extends React.Component<any, any> {
+class HomePageComponent extends React.Component<any, any> {
     render(): React.ReactNode {
+        const {t} = this.props;
         return <>
             <Header/>
             <div className={styles['page-content']}>
@@ -22,21 +24,21 @@ export class HomePage extends React.Component<any, any> {
                 </Row>
                 <ProductCollection
                     title={<Typography.Title level={3} type={"warning"}>
-                        爆款推荐
+                        {t("home_page.hot_recommended")}
                     </Typography.Title>}
                     sideImage={sideImage1}
                     products={productList1}
                 />
                 <ProductCollection
                     title={<Typography.Title level={3} type={"danger"}>
-                        新品上市
+                        {t("home_page.new_arrival")}
                     </Typography.Title>}
                     sideImage={sideImage2}
                     products={productList2}
                 />
                 <ProductCollection
                     title={<Typography.Title level={3} type={"success"}>
-                        Domestic
+                        {t("home_page.domestic_travel")}
                     </Typography.Title>}
                     sideImage={sideImage3}
                     products={productList3}
@@ -46,3 +48,5 @@ export class HomePage extends React.Component<any, any> {
             <Footer/></>
     }
 }
+
+export const HomePage = withTranslation()(HomePageComponent);

@@ -3,56 +3,65 @@ import React from "react";
 import logo from '../../assets/logo.svg';
 import {Layout, Typography, Input, Menu, Button, Dropdown} from 'antd'
 import {GlobalOutlined} from '@ant-design/icons'
-import {useParams, useLocation, useNavigate} from "react-router-dom";
 import {withRouter, RouteComponentProps} from "../../helpers/withRouter";
-import store from '../../redux/store'
-import {LanguageState} from '../../redux/languageReducer'
+import {RootState} from '../../redux/store'
+import {withTranslation, WithTranslation} from "react-i18next";
+import { changeLanguageActionCreator } from '../../redux/language/languageActions';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 
-interface State extends LanguageState {
+// interface State extends LanguageState {}
+
+const mapStateToProps = (state: RootState) => {
+    return {
+        language: state.language,
+        languageList: state.languageList
+    }
 }
 
-class HeaderComponent extends React.Component<RouteComponentProps, State> {
-    constructor(props) {
-        super(props);
-        const storeState = store.getState()
-        this.state = {
-            language: storeState.language,
-            languageList: storeState.languageList
+const mapDispatchToProps = (dispatch: Dispatch) => {
+    return {
+        changeLanguage: (code: 'zh' | 'en') => {
+            const action = changeLanguageActionCreator(code)
+            dispatch(action)
         }
-        store.subscribe(() => {
-            const storeState = store.getState()
-            if (this.state.language !== storeState.language) {
-                this.setState({language: storeState.language})
-            }
-        })
     }
+}
 
+
+class HeaderComponent extends React.Component<RouteComponentProps & // react-router type
+    WithTranslation & // i18n type
+    ReturnType<typeof mapStateToProps> & // redux store type
+    ReturnType<typeof mapDispatchToProps> // redux dispatch type
+    > {
     menuClickHandler = (e) => {
-        const action = {type: "change_language", payload: e.key}
-        store.dispatch(action)
+        // const action = {type: "change_language", payload: e.key}
+        // store.dispatch(changeLanguageActionCreator(e.key))
+        this.props.changeLanguage(e.key)
     }
 
     render() {
+        const {t} = this.props;
         const {navigate} = this.props
         return (
             <div>{/* top-header */}
                 <div className={styles["top-header"]}>
                     <div className={styles.inner}>
-                        <Typography.Text>让旅游更幸福</Typography.Text>
+                        <Typography.Text>{t("header.slogan")}</Typography.Text>
                         <Dropdown.Button
                             style={{marginLeft: 15, display: "inline"}}
                             menu={{
-                                items: this.state.languageList.map(l => {
+                                items: this.props.languageList.map(l => {
                                     return {key: l.code, label: l.name}
                                 }), onClick: this.menuClickHandler}
                             }
                             icon={<GlobalOutlined/>}
                         >
-                            {this.state.language==="zh" ? "中文" : "English"}
+                            {this.props.language==="en" ? "English" : "中文"}
                         </Dropdown.Button>
                         <Button.Group className={styles["button-group"]}>
-                            <Button onClick={() => navigate('/register')}>注册</Button>
-                            <Button onClick={() => navigate('/login')}>登陆</Button>
+                            <Button onClick={() => navigate('/register')}>{t("header.register")}</Button>
+                            <Button onClick={() => navigate('/login')}>{t("siginin")}</Button>
                         </Button.Group>
                     </div>
                 </div>
@@ -61,7 +70,7 @@ class HeaderComponent extends React.Component<RouteComponentProps, State> {
                     <span onClick={() => navigate('/')} onMouseOver={e => e.currentTarget.style.cursor = 'pointer'}>
                         <img src={logo} alt="logo" className={styles["App-logo"]}/>
                         <Typography.Title level={3} className={styles.title}>
-                            慕课旅游网
+                            {t("header.title")}
                         </Typography.Title>
                     </span>
                         <Input.Search
@@ -73,22 +82,22 @@ class HeaderComponent extends React.Component<RouteComponentProps, State> {
                         mode={"horizontal"}
                         className={styles["main-menu"]}
                         items={[
-                            {key: "1", label: "旅游首页"},
-                            {key: "2", label: "周末游"},
-                            {key: "3", label: "跟团游"},
-                            {key: "4", label: "自由行"},
-                            {key: "5", label: "私家团"},
-                            {key: "6", label: "邮轮"},
-                            {key: "7", label: "酒店+景点"},
-                            {key: "8", label: "当地玩乐"},
-                            {key: "9", label: "主题游"},
-                            {key: "10", label: "定制游"},
-                            {key: "11", label: "游学"},
-                            {key: "12", label: "签证"},
-                            {key: "13", label: "企业游"},
-                            {key: "14", label: "高端游"},
-                            {key: "15", label: "爱玩户外"},
-                            {key: "16", label: "保险"},
+                            {key: "1", label: t("header.home_page")},
+                            {key: "2", label: t("header.weekend")},
+                            {key: "3", label: t("header.group")},
+                            {key: "4", label: t("header.backpack")},
+                            {key: "5", label: t("header.private")},
+                            {key: "6", label:  t("header.cruise")},
+                            {key: "7", label: t("header.hotel")},
+                            {key: "8", label: t("header.local")},
+                            {key: "9", label: t("header.theme")},
+                            {key: "10", label: t("header.custom")},
+                            {key: "11", label: t("header.study")},
+                            {key: "12", label: t("header.visa")},
+                            {key: "13", label: t("header.enterprise")},
+                            {key: "14", label: t("header.high_end")},
+                            {key: "15", label: t("header.outdoor")},
+                            {key: "16", label: t("header.insurance")},
                         ]}
                     />
                 </div>
@@ -97,4 +106,4 @@ class HeaderComponent extends React.Component<RouteComponentProps, State> {
     }
 }
 
-export const Header = withRouter(HeaderComponent)
+export const Header = connect(mapStateToProps, mapDispatchToProps)(withTranslation()(withRouter(HeaderComponent)))

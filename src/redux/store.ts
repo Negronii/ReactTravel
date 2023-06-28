@@ -1,6 +1,10 @@
-import {createStore} from "redux";
-import languageReducer from "./languageReducer";
+import {configureStore} from '@reduxjs/toolkit';
+import languageReducer from './language/languageReducer';
 
-const store = createStore(languageReducer)
+const store = configureStore({
+  reducer: languageReducer,
+});
 
-export default store
+export type RootState = ReturnType<typeof store.getState>
+
+export default store;
