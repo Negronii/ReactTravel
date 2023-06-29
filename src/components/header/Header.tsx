@@ -6,15 +6,15 @@ import {GlobalOutlined} from '@ant-design/icons'
 import {useParams, useLocation, useNavigate} from "react-router-dom";
 import { useSelector } from '../../redux/hooks';
 import { useDispatch } from 'react-redux';
-import { LanguageActionTypes, changeLanguageActionCreator } from '../../redux/language/languageActions';
+import { changeLanguageActionCreator } from '../../redux/language/languageActions';
 import { useTranslation } from 'react-i18next';
 
 export const Header: React.FC = () => {
     const params = useParams()
     const location = useLocation()
     const navigate = useNavigate()
-    const language = useSelector((state) => state.language)
-    const languageList = useSelector((state) => state.languageList)
+    const language = useSelector((state) => state.language.language)
+    const languageList = useSelector((state) => state.language.languageList)
     const dispatch = useDispatch()
     const {t} = useTranslation()
 
@@ -49,7 +49,7 @@ export const Header: React.FC = () => {
                     <span onClick={() => navigate('/')} onMouseOver={e => e.currentTarget.style.cursor = 'pointer'}>
                         <img src={logo} alt="logo" className={styles["App-logo"]}/>
                         <Typography.Title level={3} className={styles.title}>
-                            慕课旅游网
+                            {t("header.title")}
                         </Typography.Title>
                     </span>
                     <Input.Search
