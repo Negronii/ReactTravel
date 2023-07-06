@@ -12,6 +12,7 @@ import { RootState } from '../../redux/store';
 import {fetchRecommendProductsStartActionCreator, 
     fetchRecommendProductsSuccessActionCreator, 
     fetchRecommendProductsFailActionCreator} from '../../redux/recommendProducts/recommendProductsActions';
+import { giveMeDataActionCreator } from '../../redux/recommendProducts/recommendProductsActions';
 
 const mapStateToProps = (state: RootState) => {
     return {
@@ -23,15 +24,9 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchRecommendProductsStart: () => {
-            dispatch(fetchRecommendProductsStartActionCreator())
-        },
-        fetchRecommendProductsSuccess: (data) => {
-            dispatch(fetchRecommendProductsSuccessActionCreator(data))
-        },
-        fetchFail: (error) => {
-            dispatch(fetchRecommendProductsFailActionCreator(error))
-        }
+        giveMeDataActionCreator: () => {
+            dispatch(giveMeDataActionCreator())
+        }   
     }
 }
 
@@ -48,14 +43,7 @@ class HomePageComponent extends React.Component<PropsType> {
     }
 
     async componentDidMount() {
-        this.props.fetchRecommendProductsStart()
-        try {
-            const {data} = await axios
-            .get('http://123.56.149.216:8080/api/productCollections')
-            this.props.fetchRecommendProductsSuccess(data)
-        } catch (error) {
-            this.props.fetchFail(error)
-        }
+        this.props.giveMeDataActionCreator();
     }
 
     render(): React.ReactNode {

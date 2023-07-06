@@ -43,6 +43,8 @@ class HeaderComponent extends React.Component<RouteComponentProps & // react-rou
     render() {
         const {t} = this.props;
         const {navigate} = this.props
+        console.log(navigate);
+        
         return (
             <div>{/* top-header */}
                 <div className={styles["top-header"]}>
@@ -76,6 +78,7 @@ class HeaderComponent extends React.Component<RouteComponentProps & // react-rou
                         <Input.Search
                             placeholder="请输入旅游目的地、主题、或关键字"
                             className={styles["search-input"]}
+                            onSearch={(keywords) => navigate('/search/' + keywords)}
                         />
                     </Layout.Header>
                     <Menu
