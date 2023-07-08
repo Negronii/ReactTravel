@@ -26,10 +26,7 @@ export const searchProduct = createAsyncThunk(
         if (parameters.keywords) {
             url += `&keyword=${parameters.keywords}`;
         }
-        console.log(url);
         const {headers, data} = await axios.get(url);
-        console.log(headers)
-        console.log(data)
         return {pagination: JSON.parse(headers["x-pagination"]), data: data};
     }
 )

@@ -23,7 +23,7 @@ export const SearchPage: React.FC = () => {
         if (keywords) {
             dispatch(searchProduct({ nextPage: 1, pageSize: 10, keywords }));
         }
-    }, [location])
+    }, [dispatch, keywords, location])
 
     const onPageChange = (nextPage, pageSize) => {
         if (keywords) {
